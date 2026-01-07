@@ -5,6 +5,14 @@
 > [!INFO]
 > This project was originally created as a simple CMS for a shared hosting environment. It may still eventually grow more features, but for now it focuses on being minimal and easy to use.
 
+## Screenshots
+
+![Login Screenshot](docs/screenshots/nanocms-login.png)
+![Dashboard Screenshot](docs/screenshots/nanocms-dash.png)
+![Editor Screenshot](docs/screenshots/nanocms-edit.png)
+![Help Screenshot](docs/screenshots/nanocms-help.png)
+![Settings Screenshot](docs/screenshots/nanocms-settings.png)
+
 ## Features
 
 - Provides REST-style API to fetch stream data
@@ -23,8 +31,6 @@
   - Allow custom file extensions for uploads
   - Change admin password from the UI
   - Change access token from the UI
-
----
 
 ## How Do Streams Work?
 
@@ -51,8 +57,6 @@
 - You can add any fields you want (e.g. `expiry`, `rules`, `tags`).
 - Your frontend can use these fields for filtering, display, or logic.
 - To reference an uploaded file, use `static/uploads/<stream>/<filename>` in your JSON.
-
----
 
 ## Quickstart
 
@@ -82,8 +86,6 @@ uv run application.py  # or: python application.py
 ```
 Visit [http://localhost:5000](http://localhost:5000) in your browser.
 
----
-
 ## Troubleshooting
 
 - **Can't log in?** Use `admin` and the generated password from the console on first run. The password is also saved in `data/first_start_pw.txt`.
@@ -92,8 +94,6 @@ Visit [http://localhost:5000](http://localhost:5000) in your browser.
 - **Want to reset?** Delete or edit files in `data/` and `static/uploads/`.
 - **CSRF errors?** Make sure all POST forms include the CSRF token as a hidden input.
 - **Token errors?** Ensure you are using HTTPS and sending the correct Bearer token in requests.
-
----
 
 ## Admin Password Setup and Reset
 
@@ -109,20 +109,14 @@ Visit [http://localhost:5000](http://localhost:5000) in your browser.
 - You must enter your current password and the new password (twice to confirm).
 - The password must be at least 8 characters long.
 
----
-
 ## Contributing
 
 Pull requests and issues are welcome! For major changes, please open an issue first to discuss what you’d like to change.
-
----
 
 ## Acknowledgements
 
 - Uses [highlight.js](https://highlightjs.org/) for code editing in the browser.
 - Uses [bootstrap](https://getbootstrap.com/) for responsive UI design.
-
----
 
 ## License
 
