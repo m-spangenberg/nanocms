@@ -27,6 +27,9 @@ FIRST_START_FILE = DATA_DIR / "first_start_pw.txt"
 
 
 def load_settings():
+    """
+    Load settings from the SETTINGS_FILE, applying defaults where necessary.
+    """
     if SETTINGS_FILE.exists():
         with open(SETTINGS_FILE, "r") as f:
             settings = yaml.safe_load(f) or {}
@@ -39,11 +42,21 @@ def load_settings():
 
 
 def save_settings(settings):
+    """
+    Save settings to the SETTINGS_FILE.
+
+    :param settings: The settings dictionary to save
+    """
     with open(SETTINGS_FILE, "w") as f:
         yaml.safe_dump(settings, f)
 
 
 def get_allowed_cors_origins():
+    """
+    Get the list of allowed CORS origins from settings.
+
+    :return: A list of allowed CORS origins
+    """
     settings = load_settings()
     origins = settings.get("allowed_cors_origins", DEFAULTS["allowed_cors_origins"])
     if isinstance(origins, str):
@@ -52,6 +65,11 @@ def get_allowed_cors_origins():
 
 
 def get_allowed_extensions():
+    """
+    Get the set of allowed file extensions from settings.
+
+    :return: A set of allowed file extensions
+    """
     settings = load_settings()
     exts = settings.get("allowed_extensions", DEFAULTS["allowed_extensions"])
     if isinstance(exts, str):

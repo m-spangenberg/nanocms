@@ -111,6 +111,11 @@ def logout():
 
 @main_bp.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
+    """
+    Renders the dashboard and handles stream management actions.
+
+    :return: The dashboard page
+    """
     if not is_logged_in():
         return redirect(url_for("main.login"))
 
@@ -212,6 +217,11 @@ def dashboard():
 
 @main_bp.route("/edit/<stream>", methods=["GET", "POST"])
 def edit_stream(stream):
+    """
+    Edit the JSON data for a given stream and handle file uploads.    
+    
+    :param stream: The name of the stream
+    """
     if not is_logged_in():
         return redirect(url_for("main.login"))
 
@@ -270,6 +280,12 @@ def edit_stream(stream):
 
 @main_bp.route("/uploads/<stream>/<filename>", methods=["GET"])
 def uploaded_file(stream, filename):
+    """
+    Serve an uploaded file from a stream, enforcing access token if required.
+    
+    :param stream: The name of the stream
+    :param filename: The name of the file to serve
+    """
     import re
 
     # Validate stream and filename
@@ -333,6 +349,12 @@ def uploaded_file(stream, filename):
 
 @main_bp.route("/uploads/<stream>/<filename>/delete", methods=["POST"])
 def delete_uploaded_file(stream, filename):
+    """
+    Delete an uploaded file from a stream.
+
+    :param stream: The name of the stream
+    :param filename: The name of the file to delete
+    """
     import re
 
     if not is_logged_in():
@@ -363,6 +385,11 @@ def delete_uploaded_file(stream, filename):
 
 @main_bp.route("/api/v1/<stream>")
 def api_stream(stream):
+    """
+    API endpoint to retrieve stream data, enforcing access token if required.
+    
+    :param stream: The name of the stream
+    """
     filepath = (DATA_DIR / f"{stream}.json").resolve()
     try:
         filepath.relative_to(APP_ROOT)
@@ -396,6 +423,9 @@ def api_stream(stream):
 def handle_api_token_form(request, session):
     """
     Handle API token regeneration form.
+
+    :param request: The Flask request object
+    :param session: The Flask session object
     """
     if "regenerate_token" in request.form:
         token = secrets.token_urlsafe(24)
@@ -440,6 +470,12 @@ def handle_password_form(request):
 
 
 def handle_general_settings_form(request, settings):
+    """
+    Handle general settings form.
+    
+    :param request: The Flask request object
+    :param settings: The current settings dictionary
+    """
     if (
         "allowed_cors_origins" in request.form
         or "max_content_length" in request.form
@@ -471,6 +507,12 @@ def handle_general_settings_form(request, settings):
 
 
 def handle_security_settings_form(request, settings):
+    """
+    Handle security settings form.
+
+    :param request: The Flask request object
+    :param settings: The current settings dictionary
+    """
     if (
         "session_cookie_secure" in request.form
         or "session_cookie_samesite" in request.form
@@ -489,6 +531,9 @@ def handle_security_settings_form(request, settings):
 
 @main_bp.route("/settings", methods=["GET", "POST"])
 def settings():
+    """
+    Handles GET and POST requests for the settings page.
+    """
     if not is_logged_in():
         return redirect(url_for("main.login"))
     settings = load_settings()
@@ -538,6 +583,9 @@ def settings():
 
 @main_bp.route("/help")
 def help_view():
+    """
+    Renders the help page.
+    """
     if not is_logged_in():
         return redirect(url_for("main.login"))
     return render_template("help.html")
@@ -546,6 +594,9 @@ def help_view():
 # Flask error handlers for consistent error responses
 @main_bp.errorhandler(400)
 def bad_request(e):
+    """
+    Handles bad request errors.
+    """
     if request.path.startswith("/api/"):
         return jsonify({"error": str(e)}), 400
     return render_template("error.html", error=str(e)), 400
@@ -553,6 +604,9 @@ def bad_request(e):
 
 @main_bp.errorhandler(401)
 def unauthorized(e):
+    """
+    Handles unauthorized errors.
+    """
     if request.path.startswith("/api/"):
         return jsonify({"error": str(e)}), 401
     return render_template("error.html", error=str(e)), 401
@@ -560,6 +614,9 @@ def unauthorized(e):
 
 @main_bp.errorhandler(403)
 def forbidden(e):
+    """
+    Handles forbidden errors.
+    """
     if request.path.startswith("/api/"):
         return jsonify({"error": str(e)}), 403
     return render_template("error.html", error=str(e)), 403
@@ -567,6 +624,9 @@ def forbidden(e):
 
 @main_bp.errorhandler(404)
 def not_found(e):
+    """
+    Handles not found errors.
+    """
     if request.path.startswith("/api/"):
         return jsonify({"error": str(e)}), 404
     return render_template("error.html", error=str(e)), 404
@@ -574,6 +634,9 @@ def not_found(e):
 
 @main_bp.errorhandler(500)
 def server_error(e):
+    """
+    Handles internal server errors.
+    """
     if request.path.startswith("/api/"):
         return jsonify({"error": "Internal server error"}), 500
     return render_template("error.html", error="Internal server error"), 500

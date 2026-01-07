@@ -183,6 +183,6 @@ def set_security_headers(response):
 
 
 if __name__ == "__main__":
-    environment = os.getenv("FLASK_ENV", "production")
-    debug_mode = environment == "development"
+    environment = os.getenv("FLASK_ENV", "production")  # default to 'production' if not set
+    debug_mode = environment == "development"  # True if 'FLASK_ENV' is 'development', else False
     app.run(debug=debug_mode)
