@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /edit/
+Disallow: /uploads/
+Disallow: /login
+Disallow: /help

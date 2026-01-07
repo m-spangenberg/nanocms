@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Error</title>
+  <!-- icons and manifest -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  <!-- styles -->
+  <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+</head>
+
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white">
+        <h4>Error</h4>
+      </div>
+      <div class="card-body">
+        <p class="lead text-danger">{{ error }}</p>
+        <a href="/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

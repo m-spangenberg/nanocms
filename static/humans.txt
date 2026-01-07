@@ -1,0 +1,6 @@
+/* TEAM */
+Developer: Marthinus Spangenberg
+Site: https://your-site.com
+
+/* THANKS */
+Python, Flask, Jinja2, Bootstrap, Highlightjs, and nanoCMS contributors

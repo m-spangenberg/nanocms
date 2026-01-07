@@ -1,0 +1,20 @@
+# Ignore python cache
+__pycache__/
+.mypy_cache/
+*.pyc
+
+# Local data and secrets
+data/
+security.log
+
+# Virtual envs and editor files
+venv/
+.venv/
+.env
+.vscode/
+
+# Git/other metadata
+.git/
+
+# Node artifacts if any
+node_modules/

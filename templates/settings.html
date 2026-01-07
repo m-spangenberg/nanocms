@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit {{ stream }} - nanoCMS</title>
+    <!-- icons and manifest -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  <!-- styles -->
+  <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+</head>
+<body>
+
+  <nav class="navbar navbar-light bg-light px-3 d-flex justify-content-between">
+    <a href="{{ url_for('main.dashboard') }}" class="navbar-brand mb-0 h1" style="text-decoration: none; color: inherit;">nanoCMS</a>
+    <div class="d-flex align-items-center" style="gap: 0.5em;">
+      <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
+      <a href="{{ url_for('main.help_view') }}" class="btn btn-outline-info">Help</a>
+      <a href="{{ url_for('main.logout') }}" class="btn btn-outline-secondary">Logout</a>
+    </div>
+  </nav>
+
+
+  <div class="container mt-4">
+    <h3 class="mb-3">Settings</h3>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <ul class="nav nav-tabs" id="settingsTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">General</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">Security</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="api-tab" data-bs-toggle="tab" data-bs-target="#api" type="button" role="tab">API Token</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab">Password</button>
+      </li>
+    </ul>
+    <div class="tab-content mt-3" id="settingsTabContent">
+      <!-- General Tab -->
+      <div class="tab-pane fade show active" id="general" role="tabpanel">
+        <form method="POST" action="{{ url_for('main.settings') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="mb-3">
+            <label for="allowed_cors_origins" class="form-label">Allowed CORS Origins (comma-separated or one per line)</label>
+            <textarea class="form-control" id="allowed_cors_origins" name="allowed_cors_origins" rows="3">{{ allowed_cors_origins }}</textarea>
+            <div class="form-text">Use <code>*</code> to allow all, or specify domains (e.g. https://example.com)</div>
+          </div>
+          <div class="mb-3">
+            <label for="max_content_length" class="form-label">Max File Upload Size (MB)</label>
+            <input type="number" class="form-control" id="max_content_length" name="max_content_length" min="1" value="{{ max_content_length }}">
+            <div class="form-text">Limits size of uploaded files to prevent abuse.</div>
+          </div>
+          <div class="mb-3">
+            <label for="max_json_size" class="form-label">Max JSON Payload Size (MB)</label>
+            <input type="number" class="form-control" id="max_json_size" name="max_json_size" min="1" value="{{ max_json_size }}">
+            <div class="form-text">Limits size of JSON data in API requests to prevent abuse.</div>
+          </div>
+          <div class="mb-3">
+            <label for="allowed_extensions" class="form-label">Allowed File Extensions (comma-separated)</label>
+            <input type="text" class="form-control" id="allowed_extensions" name="allowed_extensions" value="{{ allowed_extensions }}">
+            <div class="form-text">e.g. png, jpg, jpeg, pdf</div>
+          </div>
+          <button type="submit" class="btn btn-primary">Save General Settings</button>
+        </form>
+      </div>
+      <!-- Security Tab -->
+      <div class="tab-pane fade" id="security" role="tabpanel">
+        <form method="POST" action="{{ url_for('main.settings') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="session_cookie_secure" name="session_cookie_secure" {% if session_cookie_secure %}checked{% endif %}>
+            <label class="form-check-label" for="session_cookie_secure">Session Cookie Secure (HTTPS only)</label>
+            <div class="form-text">Ensure cookies are only sent over secure HTTPS connections. Used to prevent man-in-the-middle attacks.</div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="session_cookie_httponly" name="session_cookie_httponly" {% if session_cookie_httponly %}checked{% endif %}>
+            <label class="form-check-label" for="session_cookie_httponly">Session Cookie HttpOnly</label>
+            <div class="form-text">Prevents JavaScript access to the session cookie. Helps mitigate XSS attacks.</div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="session_permanent" name="session_permanent" {% if session_permanent %}checked{% endif %}>
+            <label class="form-check-label" for="session_permanent">Session Permanent</label>
+            <div class="form-text">If enabled, session persists after browser close (not recommended for sensitive apps).</div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="remember_cookie_secure" name="remember_cookie_secure" {% if remember_cookie_secure %}checked{% endif %}>
+            <label class="form-check-label" for="remember_cookie_secure">Remember Cookie Secure</label>
+            <div class="form-text">If using Flask-Login, ensures the 'remember me' cookie is only sent over HTTPS.</div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="remember_cookie_httponly" name="remember_cookie_httponly" {% if remember_cookie_httponly %}checked{% endif %}>
+            <label class="form-check-label" for="remember_cookie_httponly">Remember Cookie HttpOnly</label>
+            <div class="form-text">If using Flask-Login, prevents JavaScript access to the 'remember me' cookie.</div>
+          </div>
+          <div class="mb-3">
+            <label for="preferred_url_scheme" class="form-label">Preferred URL Scheme</label>
+            <select class="form-select" id="preferred_url_scheme" name="preferred_url_scheme">
+              <option value="https" {% if preferred_url_scheme == "https" %}selected{% endif %}>https</option>
+              <option value="http" {% if preferred_url_scheme == "http" %}selected{% endif %}>http</option>
+            </select>
+            <div class="form-text">Ensures URL generation uses HTTPS (recommended).</div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="session_refresh_each_request" name="session_refresh_each_request" {% if session_refresh_each_request %}checked{% endif %}>
+            <label class="form-check-label" for="session_refresh_each_request">Session Refresh Each Request</label>
+            <div class="form-text">Controls session refresh behavior. If enabled, session is refreshed on every request.</div>
+          </div>
+          <div class="mb-3">
+            <label for="permanent_session_lifetime" class="form-label">Permanent Session Lifetime (seconds)</label>
+            <input type="number" class="form-control" id="permanent_session_lifetime" name="permanent_session_lifetime" min="60" value="{{ permanent_session_lifetime or 3600 }}">
+            <div class="form-text">Session expiration time in seconds (default: 3600 = 1 hour).</div>
+          </div>
+          <div class="mb-3">
+            <label for="session_cookie_samesite" class="form-label">Session Cookie SameSite</label>
+            <select class="form-select" id="session_cookie_samesite" name="session_cookie_samesite">
+              <option value="Strict" {% if session_cookie_samesite == "Strict" %}selected{% endif %}>Strict</option>
+              <option value="Lax" {% if session_cookie_samesite == "Lax" %}selected{% endif %}>Lax</option>
+              <option value="None" {% if session_cookie_samesite == "None" %}selected{% endif %}>None</option>
+            </select>
+            <div class="form-text">Controls cross-site request behavior to help prevent CSRF attacks.</div>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Security Settings</button>
+        </form>
+      </div>
+      <!-- API Token Tab -->
+      <div class="tab-pane fade" id="api" role="tabpanel">
+        <form method="POST" action="{{ url_for('main.settings') }}" class="mb-3">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if api_access_token %}
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="api_access_token" value="{{ api_access_token }}" readonly>
+                <button type="button" class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById('api_access_token').value)">Copy</button>
+              </div>
+              <div class="form-text text-danger">This token is shown only once. Copy and store it securely. You cannot view it again.</div>
+            {% else %}
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control" value="••••••••••••••••••••••••" readonly>
+                  <button type="submit" name="regenerate_token" value="1" class="btn btn-warning">Regenerate Token</button>
+                </div>
+                <div class="form-text">Generate a new API access token. The token will be shown only once after generation.</div>
+            {% endif %}
+        </form>
+      </div>
+      <!-- Password Tab -->
+      <div class="tab-pane fade" id="password" role="tabpanel">
+        <form method="POST" action="{{ url_for('main.settings') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="change_password" value="1">
+          <div class="mb-3">
+            <label for="current_password" class="form-label">Current Password</label>
+            <input type="password" class="form-control" id="current_password" name="current_password" required>
+          </div>
+          <div class="mb-3">
+            <label for="new_password" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="new_password" name="new_password" minlength="8" required>
+          </div>
+          <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="8" required>
+          </div>
+          <button type="submit" class="btn btn-danger">Change Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

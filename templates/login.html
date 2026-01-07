@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - nanoCMS</title>
+  <!-- icons and manifest -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  <!-- styles -->
+  <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+  <style>
+    body {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+      opacity: 0.5;
+      background-color: #f8fafc;
+      background-image:
+        repeating-linear-gradient(90deg, #e0e7ef 0 2px, transparent 2px 40px),
+        repeating-linear-gradient(0deg, #e0e7ef 0 2px, transparent 2px 40px);
+      background-size: 40px 40px;
+      background-repeat: repeat;
+    }
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+      border-radius: 1rem;
+    }
+  </style>
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh">
+  <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+    <h2 class="text-center mb-4" style="user-select: none;">nanoCMS</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    {% if require_pw_change %}
+      <div class="alert alert-info mt-3">
+        <strong>First time setup:</strong><br>
+        A random admin password was generated and printed to the console.
+      </div>
+      {% endif %}
+  </div>
+</body>
+</html>
+

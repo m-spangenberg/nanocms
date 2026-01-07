@@ -1,0 +1,77 @@
+# Namecheap / LiteSpeed friendly .htaccess for nano-cms
+# - Preserve provider-inserted Passenger block
+# - Serve existing static files directly
+# - Protect sensitive files
+# - Enforce HTTPS and provide safe caching/security headers
+
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/rojoauof/app_cms"
+PassengerBaseURI "/"
+PassengerPython "/home/rojoauof/virtualenv/app_cms/3.11/bin/python"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect plain HTTP to HTTPS (avoid redirect loops when behind proxies)
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # If the requested resource exists as a file or directory, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Otherwise allow Passenger to handle the request
+</IfModule>
+
+# Disable directory listings
+Options -Indexes
+
+# Protect application data and sensitive files
+<IfModule mod_authz_core.c>
+    <FilesMatch "^(secret_key\.txt|admin_pw_hash\.txt|access_token\.txt|first_start_pw\.txt|settings\.yaml)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    # Apache 2.2 fallback
+    <FilesMatch "^(secret_key\.txt|admin_pw_hash\.txt|access_token\.txt|first_start_pw\.txt|settings\.yaml)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Deny access to dotfiles and VCS folders
+<FilesMatch "(^|/)\.(git|env)">
+    Require all denied
+</FilesMatch>
+
+# Security headers (set by server; keep conservative directives)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+</IfModule>
+
+# Basic caching for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/x-javascript "access plus 1 week"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# LiteSpeed specific tuning hint (optional): adjust if your host supports it
+<IfModule litespeed>
+    # LSAPI_CHILDREN can be set by the host; do not set aggressively here.
+    # LSAPI_CHILDREN 6
+</IfModule>

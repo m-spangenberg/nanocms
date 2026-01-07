@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit {{ stream }} - nanoCMS</title>
+    <!-- icons and manifest -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+  <!-- styles -->
+  <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+  <style>
+    textarea {
+      font-family: monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-light bg-light px-3 d-flex justify-content-between">
+    <a href="{{ url_for('main.dashboard') }}" class="navbar-brand mb-0 h1" style="text-decoration: none; color: inherit;">nanoCMS</a>
+    <div class="d-flex align-items-center" style="gap: 0.5em;">
+      <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
+      <a href="{{ url_for('main.help_view') }}" class="btn btn-outline-info">Help</a>
+      <a href="{{ url_for('main.settings') }}" class="btn btn-outline-warning">Settings</a>
+      <a href="{{ url_for('main.logout') }}" class="btn btn-outline-secondary">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex align-items-center" style="gap:1em;">
+        <h3 class="mb-0">Edit Stream: {{ stream }}</h3>
+        <span id="change-indicator" class="badge bg-warning text-dark" style="display:none;">Unsaved changes</span>
+      </div>
+      <div class="btn-group" role="group" aria-label="Copy Boilerplate">
+        <button type="button" class="btn btn-outline-primary" onclick="copyBoilerplate('js')" title="Copy JavaScript Example">JS</button>
+        <button type="button" class="btn btn-outline-primary" onclick="copyBoilerplate('ts')" title="Copy TypeScript Example">TS</button>
+        <button type="button" class="btn btn-outline-primary" onclick="copyBoilerplate('python')" title="Copy Python Example">Python</button>
+      </div>
+    </div>
+
+    <form method="POST" class="mb-2">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-2">
+        <label for="templateDropdown" class="form-label">Copy a template to clipboard:</label>
+        <select id="templateDropdown" class="form-select" onchange="copyTemplateToClipboard(this)">
+          <option value="">-- Select a template --</option>
+          <option value='[
+  {
+    "title": "Spring Festival",
+    "date": "2025-04-21",
+    "location": "Central Park",
+    "description": "A fun day for the whole family with food, music, and games.",
+    "tags": ["family", "outdoor", "music"],
+    "image": "static/uploads/events/springfest.jpg",
+    "expiry": "2025-04-22",
+    "rules": {"max_attendees": 500, "age_limit": 12}
+  },
+  {
+    "title": "Wine Tasting Evening",
+    "date": "2025-05-10",
+    "location": "Seaside Bistro",
+    "description": "Sample a curated selection of local wines.",
+    "tags": ["adults", "wine", "evening"],
+    "image": "static/uploads/events/winetasting.jpg",
+    "expiry": "2025-05-11"
+  }
+]'>Event List</option>
+      <option value='[
+  {
+    "name": "Classic Burger",
+    "price": 14.99,
+    "description": "Juicy beef patty, cheddar, lettuce, tomato, and our secret sauce.",
+    "image": "static/uploads/menu/burger.jpg",
+    "category": "Main",
+    "available": true,
+    "tags": ["beef", "grill"]
+  },
+  {
+    "name": "Vegan Buddha Bowl",
+    "price": 12.50,
+    "description": "Quinoa, roasted veggies, chickpeas, and tahini dressing.",
+    "image": "static/uploads/menu/buddha.jpg",
+    "category": "Vegan",
+    "available": true,
+    "tags": ["vegan", "healthy", "bowl"]
+  }
+]'>Menu</option>
+      <option value='[
+  {
+    "headline": "Riverside Bistro Wins Award",
+    "body": "We are proud to announce that Riverside Bistro has been awarded Best Local Eatery 2025!",
+    "date": "2025-03-15",
+    "author": "Editor",
+    "image": "static/uploads/news/award.jpg",
+    "tags": ["award", "news", "2025"]
+  },
+  {
+    "headline": "New Spring Menu Launched",
+    "body": "Try our fresh new dishes inspired by the season.",
+    "date": "2025-03-01",
+    "author": "Chef Joe",
+    "image": "static/uploads/news/springmenu.jpg",
+    "tags": ["menu", "spring", "update"]
+  }
+]'>News</option>
+      <option value='[
+  {
+    "speaker": "Jane Doe",
+    "topic": "The Future of Food",
+    "time": "18:00",
+    "bio": "Jane is a renowned chef and food innovator.",
+    "image": "static/uploads/speakers/jane.jpg",
+    "links": ["https://janedoe.tld"],
+    "rules": {"max_guests": 100}
+  },
+  {
+    "speaker": "John Smith",
+    "topic": "Sustainable Kitchens",
+    "time": "19:00",
+    "bio": "John runs a zero-waste kitchen in Barcelona.",
+    "image": "static/uploads/speakers/john.jpg",
+    "links": ["https://johnsmith.tld"]
+  }
+]'>Speaker Schedule</option>
+      <option value='[
+  {
+    "question": "What is nanoCMS?",
+    "answer": "A minimalist CMS for static sites, using JSON streams for content."
+  },
+  {
+    "question": "How do I add images?",
+    "answer": "Upload images in the editor and reference them as static/uploads/&lt;stream&gt;/&lt;filename&gt; in your JSON."
+  },
+  {
+    "question": "Can I add custom fields?",
+    "answer": "Yes! Add any fields you want - expiry dates, rules, tags, categories, etc. - to power your frontend logic."
+  }
+]'>FAQ</option>
+        </select>
+        <div class="form-text">Select a template to copy its JSON to your clipboard. Paste it when editing a new stream.</div>
+      </div>
+    </form>
+
+
+    <script>
+      // Change indicator logic
+      document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('data');
+        const indicator = document.getElementById('change-indicator');
+        let initialValue = textarea.value;
+        textarea.addEventListener('input', function() {
+          if (textarea.value !== initialValue) {
+            indicator.style.display = 'inline-block';
+          } else {
+            indicator.style.display = 'none';
+          }
+        });
+      });
+      function copyTemplateToClipboard(sel) {
+        if (sel.value) {
+          navigator.clipboard.writeText(sel.value);
+          sel.selectedIndex = 0;
+          alert('Template JSON copied to clipboard!');
+        }
+      }
+
+      function copyBoilerplate(lang) {
+        const stream = "{{ stream }}";
+        const tokenRequired = document.getElementById('accessTokenRequired')?.value === 'true';
+        let url = `/api/v1/${stream}`;
+        let code = '';
+        if (lang === 'js') {
+          if (tokenRequired) {
+            code = `// Requires dotenv or similar to load environment variables\nconst ACCESS_TOKEN = process.env.ACCESS_TOKEN;\nfetch('${url}', {\n  headers: {\n    'Authorization': 'Bearer ' + ACCESS_TOKEN\n  }\n})\n  .then(r => r.json())\n  .then(data => console.log(data));`;
+          } else {
+            code = `fetch('${url}')\n  .then(r => r.json())\n  .then(data => console.log(data));`;
+          }
+        } else if (lang === 'ts') {
+          if (tokenRequired) {
+            code = `// Requires dotenv or similar to load environment variables\nconst ACCESS_TOKEN: string = process.env.ACCESS_TOKEN as string;\nfetch('${url}', {\n  headers: {\n    'Authorization': 'Bearer ' + ACCESS_TOKEN\n  }\n})\n  .then((r: Response) => r.json())\n  .then((data: any) => console.log(data));`;
+          } else {
+            code = `fetch('${url}')\n  .then((r: Response) => r.json())\n  .then((data: any) => console.log(data));`;
+          }
+        } else if (lang === 'python') {
+          if (tokenRequired) {
+            code = `import os\nimport requests\nACCESS_TOKEN = os.environ["ACCESS_TOKEN"]\nheaders = {'Authorization': 'Bearer ' + ACCESS_TOKEN}\nr = requests.get('http://localhost:5000${url}', headers=headers)\nprint(r.json())`;
+          } else {
+            code = `import requests\nr = requests.get('http://localhost:5000${url}')\nprint(r.json())`;
+          }
+        }
+        navigator.clipboard.writeText(code);
+      }
+    </script>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="data" class="form-label">JSON Data</label>
+        <textarea class="form-control" name="data" id="data" rows="20">{{ data }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label for="file" class="form-label">Upload Image or PDF (png, jpg, jpeg, pdf)</label>
+        <input class="form-control" type="file" id="file" name="file">
+        <div class="form-text">After upload, reference the file as <code>static/uploads/{{ stream }}/&lt;filename&gt;</code> in your JSON.</div>
+      </div>
+      <div class="mb-3">
+        <label for="accessTokenRequired" class="form-label">Require Access Token?</label>
+        <select class="form-select" id="accessTokenRequired" name="accessTokenRequired">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+        <div class="form-text">If set to Yes, saving will embed <code>"access_token_required": true</code> in the stream JSON. This will require an access token for any API requests to this stream. Make sure HTTPS is enabled before using this feature.</div>
+      </div>
+  <button type="submit" class="btn btn-success" onclick="return handleAccessTokenFlag()">Save Changes</button>
+<script>
+// On page load, set the select based on JSON data
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const textarea = document.getElementById('data');
+    const select = document.getElementById('accessTokenRequired');
+    let json = JSON.parse(textarea.value);
+    let flag = false;
+    if (typeof json === 'object' && json !== null && !Array.isArray(json)) {
+      flag = !!json.access_token_required;
+    }
+    select.value = flag ? 'true' : 'false';
+  } catch (e) {}
+});
+
+// Before submit, embed flag in JSON
+function handleAccessTokenFlag() {
+  try {
+    const textarea = document.getElementById('data');
+    const select = document.getElementById('accessTokenRequired');
+    let json = JSON.parse(textarea.value);
+    let flag = select.value === 'true';
+    // If the data is an array, wrap it in an object and set the flag at the top level
+    if (Array.isArray(json)) {
+      json = { access_token_required: flag, items: json };
+    } else if (typeof json === 'object' && json !== null) {
+      json.access_token_required = flag;
+    }
+    textarea.value = JSON.stringify(json, null, 2);
+  } catch (e) {}
+  return true;
+}
+</script>
+    </form>
+
+    {% if uploaded_files %}
+    <hr>
+    <h5>Uploaded Files</h5>
+    <ul class="list-group mb-3">
+      {% for filename in uploaded_files %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <a href="/uploads/{{ stream }}/{{ filename }}" target="_blank">{{ filename }}</a>
+          <button class="btn btn-sm btn-outline-secondary ms-2" onclick="navigator.clipboard.writeText('static/uploads/{{ stream }}/{{ filename }}')">Copy Reference</button>
+        </div>
+        <form method="POST" action="/uploads/{{ stream }}/{{ filename }}/delete" style="display:inline;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this file?')">Delete</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</body>
+</html>

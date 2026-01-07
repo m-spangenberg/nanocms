@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help - nanoCMS</title>
+    <!-- icons and manifest -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <!-- styles -->
+    <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/highlightjs/default.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/highlightjs/highlight.min.js') }}"></script>
+  </head>
+  <body>
+
+    <script>hljs.highlightAll();</script>
+
+    <nav class="navbar navbar-light bg-light px-3 d-flex justify-content-between">
+      <a href="{{ url_for('main.dashboard') }}" class="navbar-brand mb-0 h1" style="text-decoration: none; color: inherit;">nanoCMS</a>
+      <div class="d-flex align-items-center" style="gap: 0.5em;">
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
+        <a href="{{ url_for('main.settings') }}" class="btn btn-outline-warning">Settings</a>
+        <a href="{{ url_for('main.logout') }}" class="btn btn-outline-secondary">Logout</a>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+
+      <h3 class="mb-3">nanoCMS Help</h3>
+
+      <div class="mb-4">
+        <h5>What problem does nanoCMS solve?</h5>
+        <p>
+          A majority of websites are mostly static, but have a need to update specific content frequently. This content is often structured (events, menus, news) rather than free-form. 
+          nanoCMS lets you manage that content (text, images, documents) through a simple web UI, and your static site or app can fetch this data via an API.
+        </p>
+      </div>
+
+      <div class="mb-4">
+        <h5>What nanoCMS <strong>is</strong> and <strong>is not</strong>.</h5>
+        <p>
+          nanoCMS is a headless, file-based CMS designed to support simple static sites. It is not a fully-fledged CMS like WordPress or Drupal, and it does not provide a
+          traditional WYSIWYG editor.
+        </p>
+      </div>
+
+      <div class="mb-4">
+        <h4 class="mb-3">How To</h4>
+        <ul class="nav nav-tabs" id="helpTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="streams-tab" data-bs-toggle="tab" data-bs-target="#streams" type="button" role="tab">Streams</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="editing-tab" data-bs-toggle="tab" data-bs-target="#editing" type="button" role="tab">Editing</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cases-tab" data-bs-toggle="tab" data-bs-target="#cases" type="button" role="tab">Use Cases</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="auth-tab" data-bs-toggle="tab" data-bs-target="#auth" type="button" role="tab">Authentication</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tips" type="button" role="tab">Tips</button>
+          </li>
+        </ul>
+        <div class="tab-content mt-3" id="helpTabContent">
+          <div class="tab-pane fade show active" id="streams" role="tabpanel">
+            <h5>Streams</h5>
+            <p>
+              Create a stream in the dashboard (e.g., <code>events</code>, <code>menu</code>, <code>news</code>).
+            </p>
+            <div class="alert alert-info mb-4">
+              <strong>What are streams?</strong><br />
+              Streams are named collections of data (like <code>events</code>,
+              <code>menu</code>, or <code>venue</code>) stored as JSON files in the
+              CMS. Each stream can be edited, renamed, or deleted. You can add as many
+              streams as you need. Uploaded files for each stream are kept separate.
+              To use a stream, simply create it in the dashboard and edit its data.<br />
+              <ul class="mb-0 mt-2">
+                <li>
+                  <strong>Add</strong>: Enter a unique name and click
+                  <b>Add Stream</b>.
+                </li>
+                <li>
+                  <strong>Edit</strong>: Click <b>Edit</b> to manage the stream's data
+                  and uploads.
+                </li>
+                <li>
+                  <strong>Rename</strong>: Use the rename box to change a stream's
+                  name (uploads move too).
+                </li>
+                <li>
+                  <strong>Delete</strong>: Removes the stream and all its uploads.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="editing" role="tabpanel">
+            <h5>Editing</h5>
+            <p>
+                Click "Edit" to manage the stream's <a href="https://en.wikipedia.org/wiki/JSON" target="_blank" rel="noopener">JSON</a> data and upload files (images, PDFs).
+            </p>
+            <div class="alert alert-info mb-4">
+              <strong>How does editing work?</strong><br />
+              The data you edit in a stream is saved as a JSON file. This data is
+              served at <code>/api/&lt;stream&gt;</code> for use by your static site
+              or any other consumer.
+              <ul class="mb-0 mt-2">
+                <li>
+                  You can fully customize the JSON structure—add fields like
+                  <code>expiry</code>, <code>rules</code>, <code>tags</code>, or
+                  anything else your frontend expects.
+                </li>
+                <li>
+                  Consumers (like your static site) can fetch this data and use it to
+                  display events, menus, or any dynamic content.
+                </li>
+                <li>
+                  Uploaded files (images, PDFs) can be referenced in your JSON as
+                  <code>static/uploads/&lt;stream&gt;/&lt;filename&gt;</code>.
+                </li>
+                <li>
+                  Advanced: You can add logic for your frontend to ignore expired
+                  items, show/hide content, or implement custom rules based on your
+                  JSON fields.
+                </li>
+              </ul>
+              <div class="mt-2">
+                <b>Tip:</b> You can edit the JSON directly for maximum flexibility, or
+                use copy-paste from other tools.
+              </div>
+            </div>
+            <p>
+              Fetch the stream data from <code>/api/v1/&lt;stream&gt;</code> in your static site or app.
+            </p>
+          </div>
+          <div class="tab-pane fade" id="cases" role="tabpanel">
+            <h5>Common Use-Cases</h5>
+            <ul>
+              <li>
+                <b>Events:</b> Show a list of upcoming events on your homepage.
+              </li>
+              <li><b>Menus:</b> Restaurant menu that can be updated daily.</li>
+              <li>
+                <b>News:</b> Announcements or blog posts for your organization.
+              </li>
+              <li><b>FAQs:</b> Manage a list of frequently asked questions.</li>
+              <li>
+                <b>Custom:</b> Any structured data you want to expose to your
+                frontend!
+              </li>
+            </ul>
+          </div>
+          <div class="tab-pane fade" id="auth" role="tabpanel">
+            <h5>API &amp; File Authentication: Bearer Token</h5>
+            <div class="alert alert-danger mt-2">
+              <strong>Security tip:</strong> Always use HTTPS for API and file endpoints when using authentication. Failure to do so may expose your token to interception.
+            </div>
+            <p>
+              If you enable <code>"Require Access Token"</code> for a stream, nanoCMS protects both the API endpoint (<code>/api/v1/&lt;stream&gt;</code>) and all uploaded files (<code>/uploads/&lt;stream&gt;/&lt;filename&gt;</code>) for that stream. Requests to these endpoints must include a valid Bearer token in the <code>Authorization</code> header.
+            </p>
+            <ul>
+              <li>
+                <strong>Set the token:</strong> Define your access token in the <code>.env</code> file using <code>ACCESS_TOKEN=your_secret_token</code>.
+              </li>
+              <li>
+                <strong>Send requests:</strong> Use <code>Authorization: Bearer &lt;your_token&gt;</code> in your API and file requests.
+              </li>
+              <li>
+                <strong>API Example:</strong>
+                <pre><code class="language-shell">curl -X GET https://your-api.com/api/v1/events -H "Authorization: Bearer your_secret_token"</code></pre>
+              </li>
+              <li>
+                <strong>File Example:</strong>
+                <pre><code class="language-shell">curl -X GET https://your-api.com/uploads/events/springfest.jpg -H "Authorization: Bearer your_secret_token" --output springfest.jpg</code></pre>
+              </li>
+              <li>
+                If the token is missing or incorrect, the API and file endpoints will return <code>401 Unauthorized</code> or <code>403 Forbidden</code>.
+              </li>
+            </ul>
+          </div>
+          <div class="tab-pane fade" id="tips" role="tabpanel">
+            <h5>Tips &amp; Advanced Usage</h5>
+            <ul>
+              <li>
+                You can add any fields to your JSON (expiry, rules, tags,
+                categories, etc.).
+              </li>
+              <li>
+                Reference uploaded files as
+                <code>static/uploads/&lt;stream&gt;/&lt;filename&gt;</code> in your
+                JSON.
+              </li>
+              <li>
+                Use <b>expiry</b> or <b>rules</b> fields to let your frontend filter
+                or hide items automatically.
+              </li>
+              <li>
+                Streams are just files—easy to back up, version, or edit manually if
+                needed.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h5>Code Examples</h5>
+        <p>
+          Once you have created a stream, for example <code>events</code>, you
+          can fetch and display it like this:
+        <!-- Bootstrap Tabs for Code Examples -->
+        <ul class="nav nav-tabs" id="codeTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="js-tab" data-bs-toggle="tab" data-bs-target="#js" type="button" role="tab">JavaScript</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ts-tab" data-bs-toggle="tab" data-bs-target="#ts" type="button" role="tab">TypeScript</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="react-tab" data-bs-toggle="tab" data-bs-target="#react" type="button" role="tab">React</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="curl-tab" data-bs-toggle="tab" data-bs-target="#curl" type="button" role="tab">cURL</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="python-tab" data-bs-toggle="tab" data-bs-target="#python" type="button" role="tab">Python</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="go-tab" data-bs-toggle="tab" data-bs-target="#go" type="button" role="tab">Go</button>
+          </li>
+        </ul>
+        <div class="tab-content mt-3" id="codeTabContent">
+          <div class="tab-pane fade show active" id="js" role="tabpanel">
+            <pre><code class="language-js">fetch('/api/v1/events')
+  .then(res =&gt; res.json())
+  .then(events =&gt; {
+    events.forEach(event =&gt; {
+      // Example: render event title and date
+      const el = document.createElement('div');
+      // Use textContent to avoid unescaped HTML
+      el.textContent = event.title + ' - ' + event.date;
+      document.body.appendChild(el);
+    });
+  });
+</code></pre>
+          </div>
+          <div class="tab-pane fade" id="ts" role="tabpanel">
+            <pre><code class="language-ts">type Event = {
+  title: string;
+  date: string;
+  description?: string;
+  image?: string;
+  tags?: string[];
+  expiry?: string;
+  rules?: Record&lt;string, any&gt;;
+};
+
+fetch('/api/v1/events')
+  .then(res =&gt; res.json())
+  .then((events: Event[]) =&gt; {
+    // Use events array in your app
+  });
+</code></pre>
+          </div>
+          <div class="tab-pane fade" id="react" role="tabpanel">
+            <pre><code class="language-js">import React, { useEffect, useState } from 'react';
+const EventList = () =&gt; {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() =&gt; {
+    fetch('/api/v1/events')
+      .then(res =&gt; res.json())
+      .then(data =&gt; setEvents(data));
+  }, []);
+
+  return (
+    &lt;div&gt;
+      {events.map(event =&gt; (
+        &lt;div key={event.id}&gt;
+          &lt;strong&gt;{event.title}&lt;/strong&gt; - {event.date}
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  );
+};
+</code></pre>
+          </div>
+          <div class="tab-pane fade" id="curl" role="tabpanel">
+<pre><code class="language-shell">curl -X GET https://your-api.com/api/v1/events -H "Authorization: Bearer YOUR_ACCESS_TOKEN"</code></pre>
+          </div>
+          <div class="tab-pane fade" id="python" role="tabpanel">
+<pre><code class="language-python">import httpx
+
+headers = {
+    "Authorization": "Bearer YOUR_ACCESS_TOKEN"
+}
+
+response = httpx.get("https://your-api.com/api/v1/events", headers=headers)
+events = response.json()
+</code></pre>
+          </div>
+          <div class="tab-pane fade" id="go" role="tabpanel">
+<pre><code class="language-go">import (
+    "context"
+    "fmt"
+    "net/http"
+)
+
+func main() {
+    ctx := context.Background()
+    req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://your-api.com/api/v1/events", nil)
+    req.Header.Set("Authorization", "Bearer YOUR_ACCESS_TOKEN")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    defer resp.Body.Close()
+
+    // Handle response
+}
+</code></pre>
+
+      </div>
+
+      <div class="mb-4">
+        <h5>Need more help?</h5>
+        <ul>
+          <li>Check the README for more examples and troubleshooting.</li>
+          <li>
+            Open an issue or pull request on GitHub if you have questions or
+            suggestions!
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
