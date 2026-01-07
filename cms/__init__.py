@@ -67,7 +67,12 @@ def create_app():
     app.config["PREFERRED_URL_SCHEME"] = system_settings.get("preferred_url_scheme", DEFAULTS["preferred_url_scheme"])
     app.config["SESSION_REFRESH_EACH_REQUEST"] = bool(system_settings.get("session_refresh_each_request", DEFAULTS["session_refresh_each_request"]))
     app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=int(system_settings.get("permanent_session_lifetime", DEFAULTS["permanent_session_lifetime"])))
-    app.config["USE_X_SENDFILE"] = True
+    
+    # Allow the webserver (Apache / LiteSpeed) to serve large files using X-Sendfile
+    # if mod_xsendfile (or equivalent) is enabled. 
+    # Must be False in development/debug mode to avoid content length mismatch errors.
+    is_dev = os.getenv("FLASK_ENV", "production") == "development"
+    app.config["USE_X_SENDFILE"] = (os.getenv("USE_X_SENDFILE", "False").lower() == "true") and not is_dev
 
     # Initialize extensions
     cors.init_app(app, resources={r"/api/*": {"origins": get_allowed_cors_origins()}})
