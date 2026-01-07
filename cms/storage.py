@@ -1,5 +1,5 @@
 import json
-from config import DATA_DIR, UPLOAD_FOLDER
+from .config import DATA_DIR, UPLOAD_FOLDER
 
 
 def get_streams():

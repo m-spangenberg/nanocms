@@ -17,9 +17,9 @@ DEFAULTS = {
     "allowed_cors_origins": ["*"],
 }
 
-APP_ROOT = Path(__file__).parent.resolve()
+APP_ROOT = Path(__file__).parent.parent.resolve()
 DATA_DIR = (APP_ROOT / "data").resolve()
-UPLOAD_FOLDER = (APP_ROOT / "static/uploads").resolve()
+UPLOAD_FOLDER = (APP_ROOT / "cms/static/uploads").resolve()
 SETTINGS_FILE = DATA_DIR / "settings.yaml"
 PASSWORD_HASH_FILE = DATA_DIR / "admin_pw_hash.txt"
 ACCESS_TOKEN_FILE = DATA_DIR / "access_token.txt"

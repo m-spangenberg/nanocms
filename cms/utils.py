@@ -1,5 +1,5 @@
 import re
-from config import get_allowed_extensions
+from .config import get_allowed_extensions
 
 
 def allowed_file(filename):

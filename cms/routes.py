@@ -18,8 +18,8 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from auth import get_access_token, is_logged_in, verify_token
-from config import (
+from .auth import get_access_token, is_logged_in, verify_token
+from .config import (
     APP_ROOT,
     DATA_DIR,
     DEFAULTS,
@@ -29,8 +29,8 @@ from config import (
     load_settings,
     save_settings,
 )
-from storage import get_streams
-from utils import allowed_file
+from .storage import get_streams
+from .utils import allowed_file
 
 main_bp = Blueprint("main", __name__)
 

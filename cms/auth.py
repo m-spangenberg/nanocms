@@ -3,7 +3,7 @@ import hashlib
 import secrets
 from flask import session
 from werkzeug.security import generate_password_hash
-from config import PASSWORD_HASH_FILE, ACCESS_TOKEN_FILE, FIRST_START_FILE
+from .config import PASSWORD_HASH_FILE, ACCESS_TOKEN_FILE, FIRST_START_FILE
 
 
 def is_logged_in():
