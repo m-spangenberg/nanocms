@@ -12,6 +12,11 @@
   <!-- styles -->
   <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
   <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+  <script>
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-bs-theme', 'dark');
+    }
+  </script>
   <style>
     textarea {
       font-family: monospace;
@@ -22,7 +27,7 @@
 
 <body>
 
-  <nav class="navbar navbar-light bg-light px-3 d-flex justify-content-between">
+  <nav class="navbar bg-body-tertiary px-3 d-flex justify-content-between">
     <a href="{{ url_for('main.dashboard') }}" class="navbar-brand mb-0 h1" style="text-decoration: none; color: inherit;">nanoCMS</a>
     <div class="d-flex align-items-center" style="gap: 0.5em;">
       <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
@@ -37,7 +42,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="d-flex align-items-center" style="gap:1em;">
         <h3 class="mb-0">Edit Stream: {{ stream }}</h3>
-        <span id="change-indicator" class="badge bg-warning text-dark" style="display:none;">Unsaved changes</span>
+        <span id="change-indicator" class="badge text-bg-warning" style="display:none;">Unsaved changes</span>
       </div>
       <div class="btn-group" role="group" aria-label="Copy Boilerplate">
         <button type="button" class="btn btn-outline-primary" onclick="copyBoilerplate('js')" title="Copy JavaScript Example">JS</button>

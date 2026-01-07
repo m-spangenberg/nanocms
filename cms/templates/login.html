@@ -12,6 +12,11 @@
   <!-- styles -->
   <link href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
   <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+  <script>
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-bs-theme', 'dark');
+    }
+  </script>
   <style>
     body {
       position: relative;
@@ -31,6 +36,12 @@
       background-size: 40px 40px;
       background-repeat: repeat;
     }
+    [data-bs-theme="dark"] body::before {
+      background-color: #0b0c0d;
+      background-image:
+        repeating-linear-gradient(90deg, #1e2125 0 2px, transparent 2px 40px),
+        repeating-linear-gradient(0deg, #1e2125 0 2px, transparent 2px 40px);
+    }
     .card {
       position: relative;
       z-index: 1;
@@ -38,9 +49,13 @@
       box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
       border-radius: 1rem;
     }
+    [data-bs-theme="dark"] .card {
+      background: rgba(33, 37, 41, 0.95);
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.5);
+    }
   </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh">
+<body class="bg-body-secondary d-flex align-items-center justify-content-center" style="height: 100vh">
   <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
     <h2 class="text-center mb-4" style="user-select: none;">nanoCMS</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
