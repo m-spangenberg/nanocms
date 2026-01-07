@@ -394,11 +394,15 @@ def api_stream(stream):
 
 
 def handle_api_token_form(request, session):
+    """
+    Handle API token regeneration form.
+    """
     if "regenerate_token" in request.form:
         token = secrets.token_urlsafe(24)
         from auth import store_token_hash
+        from application import secret_key
 
-        store_token_hash(token)
+        store_token_hash(token, secret_key)
         session["show_api_token_once"] = token
         flash(
             "New API access token generated. Please copy it now; it will not be shown again.",
@@ -409,6 +413,11 @@ def handle_api_token_form(request, session):
 
 
 def handle_password_form(request):
+    """
+    Handle password change form.
+    
+    :param request: The Flask request object
+    """
     if "change_password" in request.form:
         current_pw = request.form.get("current_password", "")
         new_pw = request.form.get("new_password", "")
