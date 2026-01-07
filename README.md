@@ -2,6 +2,9 @@
 
 **nanoCMS** is a lightweight CMS written in Python using Flask. It is designed for simplicity, low hosting requirements, and easy integration with static sites. You can create and manage JSON-based "streams" of data (like events, menus, or venue info) through a web interface, and access them via a RESTful API.
 
+> [!INFO]
+> This project was originally created as a simple CMS for a shared hosting environment. It may still eventually grow more features, but for now it focuses on being minimal and easy to use.
+
 ## Features
 
 - Provides REST-style API to fetch stream data
@@ -54,7 +57,7 @@
 ## Quickstart
 
 > [!CAUTION]
-> Warning! While this code is functional, it may contain bugs and lacks extensive testing. Use at your own risk, especially in production environments.
+> While this code is functional, it may contain bugs and lacks extensive testing. Use at your own risk, especially in production environments.
 
 ### Requirements
 - Python 3.11+
